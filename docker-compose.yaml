@@ -3,14 +3,14 @@ version: "3.8"
 services:
   mongo:
     image: mongo:8
-    container_name: hospital-mongo
+    container_name: hospital-mongo-krushna-jagdale
     restart: always
     ports:
       - "27017:27017"
 
   backend:
     build: ./backend
-    container_name: hospital-backend
+    container_name: hospital-backend-krushna-jagdale
     ports:
       - "4000:4000"
     restart: always
@@ -20,7 +20,7 @@ services:
 
   frontend:
     build: ./frontend
-    container_name: hospital_frontend
+    container_name: hospital_frontend-krushnaj-jagdale
     ports:
       - "5174:5173"
     restart: always
