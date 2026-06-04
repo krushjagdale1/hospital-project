@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"elasticsearch","namespace":"elk"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"elasticsearch"}},"template":{"metadata":{"labels":{"app":"elasticsearch"}},"spec":{"containers":[{"env":[{"name":"discovery.type","value":"single-node"},{"name":"xpack.security.enabled","value":"true"},{"name":"ELASTIC_PASSWORD","value":"Admin@123"},{"name":"ES_JAVA_OPTS","value":"-Xms512m -Xmx512m"}],"image":"docker.elastic.co/elasticsearch/elasticsearch:8.14.3","name":"elasticsearch","ports":[{"containerPort":9200}],"volumeMounts":[{"mountPath":"/usr/share/elasticsearch/data","name":"es-data"}]}],"initContainers":[{"command":["sh","-c","mkdir -p /usr/share/elasticsearch/data \u0026\u0026 chown -R 1000:1000 /usr/share/elasticsearch/data"],"image":"busybox","name":"fix-permissions","volumeMounts":[{"mountPath":"/usr/share/elasticsearch/data","name":"es-data"}]}],"securityContext":{"fsGroup":1000},"volumes":[{"name":"es-data","persistentVolumeClaim":{"claimName":"elasticsearch-pvc"}}]}}}}
+  creationTimestamp: "2026-06-04T07:54:26Z"
+  generation: 1
+  name: elasticsearch
+  namespace: elk
+  resourceVersion: "41022"
+  uid: 18f28a06-7ce2-4049-8c56-397af6193812
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: elasticsearch
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: elasticsearch
+    spec:
+      containers:
+      - env:
+        - name: discovery.type
+          value: single-node
+        - name: xpack.security.enabled
+          value: "true"
+        - name: ELASTIC_PASSWORD
+          value: Admin@123
+        - name: ES_JAVA_OPTS
+          value: -Xms512m -Xmx512m
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.14.3
+        imagePullPolicy: IfNotPresent
+        name: elasticsearch
+        ports:
+        - containerPort: 9200
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /usr/share/elasticsearch/data
+          name: es-data
+      dnsPolicy: ClusterFirst
+      initContainers:
+      - command:
+        - sh
+        - -c
+        - mkdir -p /usr/share/elasticsearch/data && chown -R 1000:1000 /usr/share/elasticsearch/data
+        image: busybox
+        imagePullPolicy: Always
+        name: fix-permissions
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /usr/share/elasticsearch/data
+          name: es-data
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext:
+        fsGroup: 1000
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: es-data
+        persistentVolumeClaim:
+          claimName: elasticsearch-pvc
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2026-06-04T07:55:48Z"
+    lastUpdateTime: "2026-06-04T07:55:48Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  - lastTransitionTime: "2026-06-04T07:54:26Z"
+    lastUpdateTime: "2026-06-04T07:55:48Z"
+    message: ReplicaSet "elasticsearch-78989cc5c7" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  observedGeneration: 1
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1

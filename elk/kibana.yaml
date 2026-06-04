@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "12"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"kibana","namespace":"elk"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"kibana"}},"template":{"metadata":{"labels":{"app":"kibana"}},"spec":{"containers":[{"env":[{"name":"ELASTICSEARCH_HOSTS","value":"http://elasticsearch:9200"},{"name":"XPACK_SECURITY_ENABLED","value":"true"},{"name":"ELASTICSEARCH_USERNAME","value":"kibana_system"},{"name":"ELASTICSEARCH_PASSWORD","value":"Kibana@123"}],"image":"docker.elastic.co/kibana/kibana:8.14.3","name":"kibana","ports":[{"containerPort":5601}]}]}}}}
+  creationTimestamp: "2026-06-03T19:33:18Z"
+  generation: 12
+  name: kibana
+  namespace: elk
+  resourceVersion: "41939"
+  uid: b0e0b9be-9b60-4247-bb27-ddfc0ed1ba91
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: kibana
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/restartedAt: "2026-06-04T08:04:34Z"
+      creationTimestamp: null
+      labels:
+        app: kibana
+    spec:
+      containers:
+      - env:
+        - name: ELASTICSEARCH_HOSTS
+          value: http://elasticsearch:9200
+        - name: XPACK_SECURITY_ENABLED
+          value: "true"
+        - name: ELASTICSEARCH_USERNAME
+          value: kibana_system
+        - name: ELASTICSEARCH_PASSWORD
+          value: kibana123
+        image: docker.elastic.co/kibana/kibana:8.14.3
+        imagePullPolicy: IfNotPresent
+        name: kibana
+        ports:
+        - containerPort: 5601
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2026-06-04T06:05:08Z"
+    lastUpdateTime: "2026-06-04T06:05:08Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  - lastTransitionTime: "2026-06-03T19:33:18Z"
+    lastUpdateTime: "2026-06-04T08:04:35Z"
+    message: ReplicaSet "kibana-77669895cb" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  observedGeneration: 12
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1

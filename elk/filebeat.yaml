@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  annotations:
+    deprecated.daemonset.template.generation: "7"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"DaemonSet","metadata":{"annotations":{},"name":"filebeat","namespace":"elk"},"spec":{"selector":{"matchLabels":{"app":"filebeat"}},"template":{"metadata":{"labels":{"app":"filebeat"}},"spec":{"containers":[{"args":["-c","/etc/filebeat.yml","-e"],"env":[{"name":"NODE_NAME","valueFrom":{"fieldRef":{"fieldPath":"spec.nodeName"}}}],"image":"docker.elastic.co/beats/filebeat:8.14.3","name":"filebeat","volumeMounts":[{"mountPath":"/etc/filebeat.yml","name":"config","subPath":"filebeat.yml"},{"mountPath":"/var/log","name":"varlog"},{"mountPath":"/var/log/containers","name":"containers"}]}],"serviceAccountName":"filebeat","volumes":[{"configMap":{"name":"filebeat-config"},"name":"config"},{"hostPath":{"path":"/var/log"},"name":"varlog"},{"hostPath":{"path":"/var/log/containers"},"name":"containers"}]}}}}
+  creationTimestamp: "2026-06-03T19:33:18Z"
+  generation: 7
+  name: filebeat
+  namespace: elk
+  resourceVersion: "32888"
+  uid: c8fa0289-ade9-4c00-a785-acba381d2d7f
+spec:
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: filebeat
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/restartedAt: "2026-06-04T06:45:33Z"
+      creationTimestamp: null
+      labels:
+        app: filebeat
+    spec:
+      containers:
+      - args:
+        - -c
+        - /etc/filebeat.yml
+        - -e
+        env:
+        - name: ELASTICSEARCH_HOSTS
+          value: http://elasticsearch:9200
+        - name: ELASTICSEARCH_USERNAME
+          value: elastic
+        - name: ELASTICSEARCH_PASSWORD
+          value: Admin@123
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: spec.nodeName
+        image: docker.elastic.co/beats/filebeat:8.14.3
+        imagePullPolicy: IfNotPresent
+        name: filebeat
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /etc/filebeat.yml
+          name: config
+          subPath: filebeat.yml
+        - mountPath: /var/log
+          name: varlog
+        - mountPath: /var/log/containers
+          name: containers
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: filebeat
+      serviceAccountName: filebeat
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: filebeat-config
+        name: config
+      - hostPath:
+          path: /var/log
+          type: ""
+        name: varlog
+      - hostPath:
+          path: /var/log/containers
+          type: ""
+        name: containers
+  updateStrategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+    type: RollingUpdate
+status:
+  currentNumberScheduled: 2
+  desiredNumberScheduled: 2
+  numberAvailable: 2
+  numberMisscheduled: 0
+  numberReady: 2
+  observedGeneration: 7
+  updatedNumberScheduled: 2
