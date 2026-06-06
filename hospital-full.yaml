@@ -4,6 +4,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: default
   name: mongo
 spec:
   replicas: 1
@@ -12,6 +13,7 @@ spec:
       app: mongo
   template:
     metadata:
+  namespace: default
       labels:
         app: mongo
     spec:
@@ -31,6 +33,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  namespace: default
   name: mongo-service
 spec:
   selector:
@@ -47,6 +50,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: default
   name: hospital-backend
 spec:
   replicas: 1
@@ -55,6 +59,7 @@ spec:
       app: backend
   template:
     metadata:
+  namespace: default
       labels:
         app: backend
     spec:
@@ -76,6 +81,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  namespace: default
   name: backend-service
 spec:
   selector:
@@ -92,6 +98,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: default
   name: hospital-frontend
 spec:
   replicas: 1
@@ -100,6 +107,7 @@ spec:
       app: frontend
   template:
     metadata:
+  namespace: default
       labels:
         app: frontend
     spec:
@@ -113,6 +121,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  namespace: default
   name: frontend-service
 spec:
   selector:
@@ -129,6 +138,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  namespace: default
   name: frontend-nodeport
 spec:
   type: NodePort
@@ -143,6 +153,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  namespace: default
   name: backend-nodeport
 spec:
   type: NodePort
